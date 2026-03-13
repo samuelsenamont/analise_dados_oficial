@@ -1,0 +1,192 @@
+# ==========================================
+# Exercício 1: Criando um Dicionário
+# ==========================================
+aluno = {
+    "nome": "Carlos",
+    "idade": 20,
+    "curso": "Administração no IBMEC"
+}
+
+print("=== Exercício 1 ===")
+print(f"Nome: {aluno['nome']}")
+print(f"Idade: {aluno['idade']}")
+print(f"Curso: {aluno['curso']}\n")
+
+
+# ==========================================
+# Exercício 2: Manipulação de Dicionário
+# ==========================================
+produto = {
+    "nome": "Teclado Mecânico",
+    "preco": 350.00,
+    "estoque": 10
+}
+
+# 1. Adicione uma nova chave
+produto["marca"] = "Logitech"
+# 2. Atualize o preço
+produto["preco"] = 320.00
+# 3. Reduza o estoque em 2 unidades
+produto["estoque"] -= 2
+# 4. Remova a chave 'marca'
+del produto["marca"]
+
+print("=== Exercício 2 ===")
+print(f"Dicionário atualizado: {produto}\n")
+
+
+# ==========================================
+# Exercício 3: Iterando sobre um Dicionário
+# ==========================================
+notas = {
+    "Alice": 8.5,
+    "Bruno": 7.0,
+    "Carla": 9.2,
+    "Daniel": 6.8
+}
+
+print("=== Exercício 3 ===")
+soma = 0
+# 1. Itere sobre o dicionário
+for nome, nota in notas.items():
+    print(f"Aluno: {nome} - Nota: {nota}")
+    soma += nota
+
+# 2. Calcule a média
+media = soma / len(notas)
+print(f"Média da turma: {media:.2f}\n")
+
+
+# ==========================================
+# Exercício 4: Soma de Valores
+# ==========================================
+numeros = {"a": 10, "b": 20, "c": 30}
+
+print("=== Exercício 4 ===")
+soma_valores = sum(numeros.values())
+print(f"Soma esperada: {soma_valores}\n")
+
+
+# ==========================================
+# Exercício 5: Contagem de Itens Repetidos
+# ==========================================
+lista = ["maçã", "banana", "laranja", "maçã", "banana", "maçã"]
+frequencia = {}
+
+for fruta in lista:
+    if fruta in frequencia:
+        frequencia[fruta] += 1
+    else:
+        frequencia[fruta] = 1
+
+print("=== Exercício 5 ===")
+print(f"Frequência: {frequencia}\n")
+
+
+# ==========================================
+# Exercício 6: Filtrando Dicionário
+# ==========================================
+produtos = {"caneta": 10, "mochila": 80, "caderno": 45, "notebook": 3000}
+
+# Usando dictionary comprehension para filtrar
+produtos_filtrados = {item: preco for item, preco in produtos.items() if preco > 50.00}
+
+print("=== Exercício 6 ===")
+print(f"Produtos acima de R$50: {produtos_filtrados}\n")
+
+
+# ==========================================
+# Exercício 7: Tradutor Simples
+# ==========================================
+tradutor = {
+    "could": "poderia",
+    "would": "iria",
+    "may": "pode",
+    "on": "sobre",
+    "in": "dentro",
+    "at": "em"
+}
+
+print("=== Exercício 7 ===")
+# Exemplo simulando o input do usuário
+palavra_digitada = "would" # Substitua por: input("Digite uma palavra em inglês: ").lower()
+
+if palavra_digitada in tradutor:
+    print(f"A tradução de '{palavra_digitada}' é '{tradutor[palavra_digitada]}'")
+else:
+    print("Palavra não encontrada\n")
+print()
+
+
+# ==========================================
+# Exercício 8: Lista de Compras
+# ==========================================
+lista_compras = {
+    "copos de alumínio": 50,
+    "canetas": 10
+}
+
+# Adicionar produto
+lista_compras["post-its"] = 5
+# Atualizar quantidade
+lista_compras["copos de alumínio"] = 100
+# Remover item
+del lista_compras["canetas"]
+
+print("=== Exercício 8 ===")
+print("Lista de compras final:")
+for produto, qtd in lista_compras.items():
+    print(f"- {produto}: {qtd} unidades")
+print()
+
+
+# ==========================================
+# Exercício 9: Dicionário Aninhado
+# ==========================================
+turma = {
+    "Ana": {"idade": 17, "notas": [8, 9, 7]},
+    "Pedro": {"idade": 18, "notas": [6, 7, 8]},
+    "Mariana": {"idade": 17, "notas": [9, 10, 8]}
+}
+
+print("=== Exercício 9 ===")
+# 1. Adicionar um novo aluno
+turma["Lucas"] = {"idade": 19, "notas": [7, 8, 9]}
+
+maior_media = 0
+melhor_aluno = ""
+
+# 2. Calcular a média de cada aluno
+for aluno, dados in turma.items():
+    notas_aluno = dados["notas"]
+    media_aluno = sum(notas_aluno) / len(notas_aluno)
+    print(f"{aluno}: Média {media_aluno:.1f}")
+    
+    # 3. Encontrar o aluno com a maior média
+    if media_aluno > maior_media:
+        maior_media = media_aluno
+        melhor_aluno = aluno
+
+print(f"Aluno com a maior média: {melhor_aluno}\n")
+
+
+# ==========================================
+# Exercício 10: Cadastro de Funcionários
+# ==========================================
+funcionarios = {}
+
+# Adicionando funcionários simulando um cadastro
+funcionarios["João"] = {"cargo": "Estagiário no STM", "salario": 1200.00}
+funcionarios["Marcos"] = {"cargo": "Analista de Licitações", "salario": 6500.00}
+
+print("=== Exercício 10 ===")
+# Simulando a consulta
+nome_consulta = "João" # Substitua por: input("Digite o nome do funcionário: ")
+
+if nome_consulta in funcionarios:
+    dados_func = funcionarios[nome_consulta]
+    print(f"Informações de {nome_consulta}:")
+    print(f"Cargo: {dados_func['cargo']}")
+    print(f"Salário: R$ {dados_func['salario']:.2f}")
+else:
+    print("Funcionário não encontrado.")

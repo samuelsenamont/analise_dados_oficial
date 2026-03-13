@@ -1,0 +1,122 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Carregando o dataset
+# Substitua 'salary.xlsx - Sheet1.csv' pelo caminho correto do seu arquivo, se necessário.
+# Exemplo com o "r" antes das aspas (ajuda o Python a ler as barras do Windows)
+df = pd.read_csv(r'C:\Users\samuel\OneDrive\Documentos\IBMEC\Programação para analise de dados\salary.xlsx', sep='',)
+
+# Variável auxiliar para a coluna padronizada de salário
+col_salario = 'salary_in_usd'
+
+# 1. Quantas linhas e quantas colunas tem o dataset?
+linhas, colunas = df.shape
+print(f"Linhas: {linhas}, Colunas: {colunas}\n")
+
+
+# 2. Qual a média salarial? Qual é o maior salário? O menor salário?
+media_salarial = df[col_salario].mean()
+maior_salario = df[col_salario].max()
+menor_salario = df[col_salario].min()
+print(f"Média: US$ {media_salarial:,.2f}")
+print(f"Maior: US$ {maior_salario:,.2f}")
+print(f"Menor: US$ {menor_salario:,.2f}\n")
+
+
+# 3. Crie um df com apenas as colunas job_title, salary, company_location, company_size, remote_ratio
+df_filtrado = df[['job_title', 'salary', 'company_location', 'company_size', 'remote_ratio']]
+print(df_filtrado.head())
+print()
+
+
+# 4. Qual é o maior e menor salário de um “Data Scientist”? Onde fica essas empresas?
+df_ds = df[df['job_title'] == 'Data Scientist']
+
+# Pegando a linha (índice) do maior e menor salário
+idx_max_ds = df_ds[col_salario].idxmax()
+idx_min_ds = df_ds[col_salario].idxmin()
+
+linha_max = df_ds.loc[idx_max_ds]
+linha_min = df_ds.loc[idx_min_ds]
+
+print(f"Maior salário (Data Scientist): US$ {linha_max[col_salario]} | Localização: {linha_max['company_location']}")
+print(f"Menor salário (Data Scientist): US$ {linha_min[col_salario]} | Localização: {linha_min['company_location']}\n")
+
+
+# 5. Qual a profissão com a maior média salarial? E a menor?
+medias_por_profissao = df.groupby('job_title')[col_salario].mean()
+print(f"Maior média salarial: {medias_por_profissao.idxmax()} (US$ {medias_por_profissao.max():,.2f})")
+print(f"Menor média salarial: {medias_por_profissao.idxmin()} (US$ {medias_por_profissao.min():,.2f})\n")
+
+
+# 6. Quais as profissões com a média salarial maior que a média geral?
+profissoes_acima_media = medias_por_profissao[medias_por_profissao > media_salarial]
+print(f"Existem {len(profissoes_acima_media)} profissões acima da média geral.")
+print("Algumas delas:", list(profissoes_acima_media.index[:5]), "...\n")
+
+
+# 7. Qual a localização com maior média salarial?
+media_por_local = df.groupby('company_location')[col_salario].mean()
+print(f"Local com maior média salarial: {media_por_local.idxmax()}\n")
+
+
+# 8. Quais as profissões que existem no Brasil (BR)?
+profissoes_br = df[df['company_location'] == 'BR']['job_title'].unique()
+print("Profissões no Brasil:")
+for prof in profissoes_br:
+    print(f"- {prof}")
+print()
+
+
+# 9. Qual a média salarial no Brasil?
+media_br = df[df['company_location'] == 'BR'][col_salario].mean()
+print(f"Média salarial no BR: US$ {media_br:,.2f}\n")
+
+
+# 10. Quantas profissões existem no Brasil?
+qtd_profissoes_br = df[df['company_location'] == 'BR']['job_title'].nunique()
+print(f"Quantidade de profissões distintas no Brasil: {qtd_profissoes_br}\n")
+
+
+# 11. Qual a profissão que mais ganha no Brasil?
+media_profissoes_br = df[df['company_location'] == 'BR'].groupby('job_title')[col_salario].mean()
+print(f"Profissão que mais ganha no BR: {media_profissoes_br.idxmax()} (Média de US$ {media_profissoes_br.max():,.2f})\n")
+
+
+# 12. Quantas profissões tem nos US e que trabalham em empresas grandes (L)?
+filtro_us_l = (df['company_location'] == 'US') & (df['company_size'] == 'L')
+qtd_profissoes_us_l = df[filtro_us_l]['job_title'].nunique()
+print(f"Profissões nos EUA em empresas grandes (L): {qtd_profissoes_us_l}\n")
+
+
+# 13. Qual é a média salarial das empresas médias (M) na Canada (CA)?
+filtro_ca_m = (df['company_location'] == 'CA') & (df['company_size'] == 'M')
+media_ca_m = df[filtro_ca_m][col_salario].mean()
+print(f"Média salarial no Canadá (empresas M): US$ {media_ca_m:,.2f}\n")
+
+
+# 14. Qual é o país com mais profissões? E qual é o com menos?
+contagem_profissoes_pais = df.groupby('company_location')['job_title'].nunique()
+pais_mais_profissoes = contagem_profissoes_pais.idxmax()
+# Vários países podem ter apenas 1 profissão (o mínimo). Vamos listar alguns.
+min_profissoes = contagem_profissoes_pais.min()
+paises_menos_profissoes = contagem_profissoes_pais[contagem_profissoes_pais == min_profissoes].index.tolist()
+
+print(f"País com MAIS profissões: {pais_mais_profissoes} ({contagem_profissoes_pais.max()} profissões)")
+print(f"Países com MENOS profissões (apenas {min_profissoes}): {paises_menos_profissoes[:5]} ...\n")
+
+
+# 15. Quem ganha mais que trabalha remoto, presencial ou híbrido?
+# 0 = Presencial, 50 = Híbrido, 100 = Remoto
+media_por_modelo = df.groupby('remote_ratio')[col_salario].mean()
+print("Média salarial por modelo de trabalho:")
+print(f"Presencial (0%): US$ {media_por_modelo.get(0, 0):,.2f}")
+print(f"Híbrido (50%): US$ {media_por_modelo.get(50, 0):,.2f}")
+print(f"Remoto (100%): US$ {media_por_modelo.get(100, 0):,.2f}\n")
+
+
+# 16. Qual o país com maior numero de profissões trabalhando 100% remoto?
+# Filtramos primeiro para 100% remoto, agrupamos por país e contamos as profissões únicas
+df_remoto = df[df['remote_ratio'] == 100]
+pais_mais_remoto = df_remoto.groupby('company_location')['job_title'].nunique().idxmax()
+print(f"País com mais profissões 100% remotas: {pais_mais_remoto}")
